@@ -4,23 +4,44 @@ const box = require('box-node-sdk');
 const fs = require('fs');
 
 // Read and parse the automatically created Box configuration file.
-let configFile = fs.readFileSync(__dirname + '/26302194_wreanra5_config.json');
+let configFile = fs.readFileSync(__dirname + '/26302194_wreanra5_config.json') || '';
 configFile = JSON.parse(configFile);
 
 // Initialize the SDK with the Box configuration file and create a client that uses the Service Account.
 let session = box.getPreconfiguredInstance(configFile);
 let serviceAccountClient = session.getAppAuthClient('enterprise');
 
+const appUserClient = session.getAppAuthClient('user', '2911271647');
 // Use the users.get method to retrieve current user's information by passing 'me' as the ID.
 // Since this client uses the Service Account, this will return the Service Account's information.
-
-// serviceAccountClient.folders.getItems('0', null, (err, res) => {
+// serviceAccountClient.files.getDownloadURL('283045103190', (err, res) => {
 //   console.log(err, res);
-// })
-serviceAccountClient.files.getEmbedLink('283046381258',
-  (err, res) => {
-    console.log(err, res);
-});
+// });
+
+// console.log(serviceAccountCLinet.allUsers);
+// serviceAccountClient.users.get('', null, (err, res) => console.log(err, res))
+// serviceAccountClient.files.getDownloadURL('283045103190', null, (error, stream) => {
+//
+//    if (error || !stream) {
+//      return(error || 'No file returned');
+//    }
+//
+//    // write the file to disk
+//    // const output = fs.createWriteStream('text.pdf');
+//    //
+//    // const pipe = stream.pipe(output);
+//
+//    console.log(stream);
+//    // resolve(stream.pipe(output));
+//  });
+
+appUserClient.folders.getItems('46361370662', {limit: 250}, (err, res) => {
+  console.log(err, res);
+})
+// serviceAccountClient.files.update('283046381258', {shared_link: serviceAccountClient.accessLevels.DEFAULT},
+//   (err, res) => {
+//     console.log(err, res);
+// });
 
 // serviceAccountClient.search.query('FRX-007555', { limit: 1 }, (err, res) => {
 //   console.log(err, res);
